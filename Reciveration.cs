@@ -78,13 +78,36 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
 
     public abstract void Init();
 
+    /// <summary>
+    /// 转换为任意基类的事件接收器
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T ToReciveration<T>() where T:Reciveration
+    {
+        return this as T;
+    }
+
 
     public void TransformDelta(Transform sub,Vector3 tPosition,Vector3 tEularAngles)
     {
         if (parentReciveration == null)
         {
-            transform.position = Vector3.Lerp(transform.position, tPosition, Time.deltaTime * 10.0f);
-            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, tEularAngles, Time.deltaTime * 10.0f);
+            Rigidbody2D targetRigid = transform.gameObject.GetComponent<Rigidbody2D>();
+            Vector3 targetPos = Vector3.Lerp(transform.position, tPosition, Time.time);
+            Vector3 targetEulerAngles = Vector3.Lerp(transform.eulerAngles, tEularAngles, Time.time*0.2f);
+            if (targetRigid != null)
+            {
+                Debug.LogWarning("targetRigid.MovePosition");
+                targetRigid.velocity = Vector3.zero;
+                targetRigid.MovePosition(targetPos);
+                targetRigid.MoveRotation(targetEulerAngles.z);
+            }
+            else
+            {
+                transform.position = targetPos;
+                transform.eulerAngles = targetEulerAngles;
+            }
         }
         else
         {

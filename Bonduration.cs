@@ -45,7 +45,7 @@ public class Bonduration : Reciveration
     public SpriteRenderer bondurationRegion = null;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         OnAttaching();
     }
@@ -76,7 +76,7 @@ public class Bonduration : Reciveration
     {
         get
         {
-            return destinyBonduration != null && Vector3.Distance(transform.position, destinyBonduration.OppositePosition) < 0.0002f;
+            return destinyBonduration != null && Vector3.Distance(transform.position, destinyBonduration.OppositePosition) < 0.0005f;
         }
     }
 
@@ -166,6 +166,22 @@ public class Bonduration : Reciveration
         bondurationRegion.color = new Color(0.35f,1.0f, 0.1f, 0.45f);
         bondurationRegion.enabled = false;
         bondurationRegion.gameObject.tag = "viewregion";
+    }
+
+    /// <summary>
+    /// 当准备链接，显示触碰范围
+    /// </summary>
+    public void Focus(bool state)
+    {
+        if (bondState == BondState.Break)
+        {
+            bondurationRegion.color = new Color(0.35f, 1.0f, 0.1f, 0.45f);//断开时显示的颜色
+        }
+        else
+        {
+            bondurationRegion.color = new Color(0.7f, 0.7f, 0.7f, 0.45f);//链接时的颜色
+        }
+        bondurationRegion.enabled = state;
     }
 
     public override void Trigger(string eid, Collider2D target, CollisionType type)

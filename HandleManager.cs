@@ -48,7 +48,12 @@ public class HandleManager : MonoBehaviour {
                 offsetDragPos = CursorSelection.position - handleTarget.transform.position;
                 foreach(GameObject target in GameObject.FindGameObjectsWithTag("viewregion"))
                 {
-                    target.GetComponent<SpriteRenderer>().enabled = true;
+                    CollisionRecord collisionRec = target.GetComponentInParent<CollisionRecord>();
+                    if (collisionRec != null)
+                    {
+                        Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
+                        bonduration.Focus(true);
+                    }
                 }
             }
         }
@@ -71,7 +76,12 @@ public class HandleManager : MonoBehaviour {
 
                 foreach (GameObject target in GameObject.FindGameObjectsWithTag("viewregion"))
                 {
-                    target.GetComponent<SpriteRenderer>().enabled = false;
+                    CollisionRecord collisionRec = target.GetComponentInParent<CollisionRecord>();
+                    if (collisionRec != null)
+                    {
+                        Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
+                        bonduration.Focus(false);
+                    }
                 }
             }
         }
