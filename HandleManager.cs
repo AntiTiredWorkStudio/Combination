@@ -10,7 +10,15 @@ public class HandleManager : MonoBehaviour {
             return GameObject.FindObjectOfType<HandleManager>();
         }
     }
-    Vector3 offsetDragPos;
+    public Vector3 DragOffset
+    {
+        get
+        {
+            return offsetDragPos + hitOffsetDragPos;
+        }
+    }
+    public Vector3 offsetDragPos;
+    public Vector3 hitOffsetDragPos = Vector3.zero;
     public Transform CursorSelection;
     public Camera InputCamera;
     public Reciveration handleTarget = null;
@@ -55,15 +63,17 @@ public class HandleManager : MonoBehaviour {
                 Vector3 current = hit2D.point;
                 CursorSelection.position = current;
                 offsetDragPos = CursorSelection.position - handleTarget.transform.position;
-
+                hitOffsetDragPos = Vector3.zero;
                 HintRegionView(true);
             }
         }
         if(handleTarget != null)
         {
-            Vector3 current = InputPosition - offsetDragPos;
+            Vector3 current = InputPosition - DragOffset;
             current.z = 0.0f;
             CursorSelection.position = current;
+            if(handleTarget.dynamicState!=DynamicState.Dynamic)
+                handleTarget.SetDynamicState(DynamicState.Dynamic);
             handleTarget.TransformComplete(CursorSelection, CursorSelection.position, handleTarget.transform.eulerAngles);
         }
 

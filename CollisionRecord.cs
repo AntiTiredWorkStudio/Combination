@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum CollisionType
 {
-    ENTER,EXIT
+    ENTER,EXIT,STAY
 }
 public interface CollisionReciver
 {
@@ -43,7 +43,6 @@ public class CollisionRecord : MonoBehaviour {
             {
                 targetReciver = rtarget as CollisionReciver;
                 eventObject = rtarget;
-                //Debug.LogWarning(eventObject.name + ":target Reciver is yes");
                 break;
             }
             /*Bonduration btarget = seek.gameObject.GetComponent<Bonduration>();
@@ -140,7 +139,9 @@ public class CollisionRecord : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D target){CallCollisionEvent(target, CollisionType.ENTER); }
-    void OnCollisionExit2D(Collision2D target){ CallCollisionEvent(target, CollisionType.EXIT);}
-    void OnTriggerEnter2D(Collider2D target){CallTriggerEvent(target, CollisionType.ENTER);}
+    void OnCollisionStay2D(Collision2D target) { CallCollisionEvent(target, CollisionType.STAY); }
+    void OnCollisionExit2D(Collision2D target){ CallCollisionEvent(target, CollisionType.EXIT); }
+    void OnTriggerEnter2D(Collider2D target){CallTriggerEvent(target, CollisionType.ENTER); }
+    void OnTriggerStay2D(Collider2D target) { CallTriggerEvent(target, CollisionType.STAY); }
     void OnTriggerExit2D(Collider2D target) {CallTriggerEvent(target, CollisionType.EXIT); }
 }

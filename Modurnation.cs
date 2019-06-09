@@ -25,7 +25,19 @@ public class Modurnation : Reciveration
 
     public override void Collision(string eid, Collision2D target, CollisionType type)
     {
-        Debug.Log(target.gameObject.name+","+eid);
+       /* if (eid == "body" && (type == CollisionType.STAY || type == CollisionType.ENTER))
+        {
+            if (HandleManager.Instance.handleTarget == CollisionRecord.TransforReciver<Reciveration>(target))
+            {
+                Vector2 targetpos = CollisionRecord.TransforReciver<Reciveration>(target).transform.position;
+                if (target.contacts.Length > 0)
+                {
+                    HandleManager.Instance.hitOffsetDragPos = (target.contacts[0].point - targetpos).normalized * Vector2.Distance(target.contacts[0].point, targetpos);
+                }
+                //HandleManager.Instance.handleTarget = null;
+            }
+            Debug.Log(target.gameObject.name + "," + eid);
+        }*/
     }
 
     public override void Init()
@@ -66,6 +78,7 @@ public class Modurnation : Reciveration
             else
             {
                 targetRigid.constraints = RigidbodyConstraints2D.None;
+                targetRigid.velocity = Vector2.zero;
                // targetRigid.bodyType = RigidbodyType2D.Dynamic;
                 //targetRigid.WakeUp();
             }
@@ -87,5 +100,14 @@ public class Modurnation : Reciveration
             }
             recive.UpdateState();
         }
+    }
+
+    /// <summary>
+    /// 创建组件对象
+    /// </summary>
+    [ContextMenu("Create Modurnation")]
+    public void BuildModurnation()
+    {
+
     }
 }

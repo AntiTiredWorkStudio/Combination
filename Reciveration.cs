@@ -99,6 +99,10 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
 
     public void TransformDelta(Transform sub,Vector3 tPosition,Vector3 tEularAngles)
     {
+        if (HandleManager.Instance.handleTarget !=null)
+        {
+            HandleManager.Instance.handleTarget = null;
+        }
         if (parentReciveration == null)
         {
             Rigidbody2D targetRigid = transform.gameObject.GetComponent<Rigidbody2D>();
@@ -107,12 +111,16 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
 
             if (targetRigid != null)
             {
-               // Debug.LogWarning("targetRigid.MovePosition");
                 targetRigid.velocity = Vector3.zero;
                 if ((targetEulerAngles - transform.eulerAngles).magnitude < 0.05f)
                 {
+                    //Debug.LogWarning(name + ":" + targetPos +"->"+ tPosition);
                     targetRigid.MovePosition(targetPos);
-                }
+                }/*
+                else
+                {
+                    Debug.LogWarning(name + ":" + (targetEulerAngles - transform.eulerAngles).magnitude);
+                }*/
                 targetRigid.MoveRotation(targetEulerAngles.z);
             }
             else

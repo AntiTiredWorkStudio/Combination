@@ -79,14 +79,25 @@ public class Bonduration : Reciveration
         }
         destinyBonduration = target;
         bondState = BondState.Connecting;
+#if UNITY_EDITOR
         UnityEditor.Selection.activeObject = this.gameObject;
+#endif
     }
 
     public bool ConnectionJurdgment
     {
         get
         {
-            return destinyBonduration != null && Vector3.Distance(transform.position, destinyBonduration.OppositePosition) < 0.0005f;
+            if(destinyBonduration == null)
+            {
+                return false;
+            }
+            bool distance = Vector2.Distance(transform.position, destinyBonduration.OppositePosition) < 0.0005f;
+            if(destinyBonduration == null)
+            {
+                BreakAttach(destinyBonduration);
+            }
+            return destinyBonduration != null && distance;
         }
     }
 

@@ -26,7 +26,17 @@ public class Combination : Reciveration
 
     public override void Init()
     {
-
+        foreach(Modurnation modurnation in transform.GetComponentsInChildren<Modurnation>())
+        {
+            modurnation.parentReciveration = this;
+            if (modurnation.gameObject.GetComponent<Rigidbody2D>() != null)
+            {
+                Destroy(modurnation.gameObject.GetComponent<Rigidbody2D>());
+            }
+        }
+        Rigidbody2D rigid = gameObject.AddComponent<Rigidbody2D>();
+        rigid.gravityScale = 0.0f;
+        rigid.bodyType = RigidbodyType2D.Dynamic;
     }
 
     public override void OnDynamicStateChange(DynamicState cState)
