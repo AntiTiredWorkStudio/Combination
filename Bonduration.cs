@@ -33,6 +33,15 @@ public class Bonduration : Reciveration
         {
             Vector3 current = transform.eulerAngles;
             Vector3 delta = new Vector3(0.0f, 0.0f, 180.0f);
+            if(current.z > 180.0f)
+            {
+                delta.z = -180.0f;
+            }
+            else
+            {
+                delta.z = 180.0f;
+            }
+
             current.x = 0.0f;
             current.y = 0.0f;
             current.z = (current.z + delta.z) % 360.0f;
@@ -70,6 +79,7 @@ public class Bonduration : Reciveration
         }
         destinyBonduration = target;
         bondState = BondState.Connecting;
+        UnityEditor.Selection.activeObject = this.gameObject;
     }
 
     public bool ConnectionJurdgment
@@ -77,6 +87,14 @@ public class Bonduration : Reciveration
         get
         {
             return destinyBonduration != null && Vector3.Distance(transform.position, destinyBonduration.OppositePosition) < 0.0005f;
+        }
+    }
+
+    public override bool CanHandle
+    {
+        get
+        {
+            return bondState != BondState.Connecting;
         }
     }
 
@@ -256,6 +274,13 @@ public class Bonduration : Reciveration
         if (cState == DynamicState.Stable && bondState == BondState.Connection)
         {
             //Debug.LogWarning(name + "TransformComplete");
+            //Debug.LogWarning(name + "ConnectionJurdgment");
+            if (!ConnectionJurdgment)
+            {
+                // Debug.LogWarning(name + "ConnectionJurdgment Break");
+                destinyBonduration.BreakAttach(this);
+                BreakAttach(destinyBonduration);
+            }else
             TransformComplete(transform, destinyBonduration.OppositePosition, destinyBonduration.OppositeRotateEularAngles);
         }
 
@@ -267,6 +292,17 @@ public class Bonduration : Reciveration
                // Debug.LogWarning(name + "ConnectionJurdgment Break");
                 BreakAttach(destinyBonduration);
             }
+        }
+    }
+
+    public override void UpdateState()
+    {
+        if (!ConnectionJurdgment)
+        {
+            dynamicState = DynamicState.Stable;
+            bondState = BondState.Break;
+            destinyBonduration = null;
+            targetAnimator.SetBool("GateOpen", false);
         }
     }
 }

@@ -40,21 +40,23 @@ public class HandleManager : MonoBehaviour {
             {
                 //Debug.LogWarning(hit2D+":"+hit2D.collider.name);
                 handleTarget = CollisionRecord.TransforReciver<Reciveration>(hit2D.collider);
+
+                Debug.Log("click:" + handleTarget.RootReciveration.CanHandle);
+                if (!handleTarget.RootReciveration.CanHandle)
+                {
+                    handleTarget.RootReciveration.UpdateState();
+                    /*Debug.Log("无法移动" + handleTarget.RootReciveration.CanHandle);
+                    handleTarget = null;
+                    return;*/
+                }
                 handleTarget.SetDynamicState(DynamicState.Dynamic);
                 
 
                 Vector3 current = hit2D.point;
                 CursorSelection.position = current;
                 offsetDragPos = CursorSelection.position - handleTarget.transform.position;
-                foreach(GameObject target in GameObject.FindGameObjectsWithTag("viewregion"))
-                {
-                    CollisionRecord collisionRec = target.GetComponentInParent<CollisionRecord>();
-                    if (collisionRec != null)
-                    {
-                        Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
-                        bonduration.Focus(true);
-                    }
-                }
+
+                HintRegionView(true);
             }
         }
         if(handleTarget != null)
@@ -74,18 +76,22 @@ public class HandleManager : MonoBehaviour {
 
                 handleTarget = null;
 
-                foreach (GameObject target in GameObject.FindGameObjectsWithTag("viewregion"))
-                {
-                    CollisionRecord collisionRec = target.GetComponentInParent<CollisionRecord>();
-                    if (collisionRec != null)
-                    {
-                        Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
-                        bonduration.Focus(false);
-                    }
-                }
+                HintRegionView(false);
             }
         }
     }
 
+    public void HintRegionView(bool result)
+    {
+        foreach (GameObject target in GameObject.FindGameObjectsWithTag("viewregion"))
+        {
+            CollisionRecord collisionRec = target.GetComponentInParent<CollisionRecord>();
+            if (collisionRec != null)
+            {
+                Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
+                bonduration.Focus(result);
+            }
+        }
+    }
 
 }

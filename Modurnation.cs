@@ -6,6 +6,23 @@ public class Modurnation : Reciveration
 {
     Rigidbody2D targetRigid;
     public Transform Body;
+    CollisionRecord SelfCollisionRecord;
+
+    public override bool CanHandle
+    {
+        get
+        {
+            foreach(Bonduration bond in gameObject.GetComponentsInChildren<Bonduration>())
+            {
+                if (!bond.CanHandle)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     public override void Collision(string eid, Collision2D target, CollisionType type)
     {
         Debug.Log(target.gameObject.name+","+eid);
@@ -13,7 +30,12 @@ public class Modurnation : Reciveration
 
     public override void Init()
     {
+        SelfCollisionRecord = gameObject.AddComponent<CollisionRecord>();
+        SelfCollisionRecord.enabled = false;
+        SelfCollisionRecord.eventid = "module";
+
         targetRigid = GetComponent<Rigidbody2D>();
+
         Body = transform.Find("Body");
         if (Body != null)
         {
@@ -21,12 +43,14 @@ public class Modurnation : Reciveration
             {
                 if (target.gameObject.GetComponent<Collider2D>())
                 {
-                //    Debug.LogWarning(target.gameObject.name + "not have collider2D");
+
                 }
             }
         }
         SetDynamicState(DynamicState.Dynamic);
         SetDynamicState(DynamicState.Stable);
+
+        SelfCollisionRecord.enabled = true;
     }
 
     public override void OnDynamicStateChange(DynamicState cState)
@@ -51,5 +75,17 @@ public class Modurnation : Reciveration
     public override void Trigger(string eid, Collider2D target, CollisionType type)
     {
 
+    }
+
+    public override void UpdateState()
+    {
+        foreach (Reciveration recive in gameObject.GetComponentsInChildren<Reciveration>(true))
+        {
+            if (recive == this)
+            {
+                continue;
+            }
+            recive.UpdateState();
+        }
     }
 }

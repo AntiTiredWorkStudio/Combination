@@ -38,10 +38,18 @@ public class CollisionRecord : MonoBehaviour {
         Transform seek = transform;
         while (seek != null)
         {
-            Bonduration btarget = seek.gameObject.GetComponent<Bonduration>();
+            Reciveration rtarget = seek.gameObject.GetComponent<Reciveration>();
+            if (rtarget != null)
+            {
+                targetReciver = rtarget as CollisionReciver;
+                eventObject = rtarget;
+                //Debug.LogWarning(eventObject.name + ":target Reciver is yes");
+                break;
+            }
+            /*Bonduration btarget = seek.gameObject.GetComponent<Bonduration>();
             Modurnation mtarget = seek.gameObject.GetComponent<Modurnation>();
             Combination ctarget = seek.gameObject.GetComponent<Combination>();
-            //Debug.Log(btarget);
+
             if (btarget != null)
             {
                 targetReciver = btarget as CollisionReciver;
@@ -59,13 +67,24 @@ public class CollisionRecord : MonoBehaviour {
                 targetReciver = ctarget as CollisionReciver;
                 eventObject = ctarget;
                 break;
-            }
+            }*/
             seek = seek.parent;
         }
         if(targetReciver == null)
         {
             name = "[empty reciver]" + name;
         }
+       /* if (GetComponent<Collider2D>())
+        {
+
+            Collider2D tCollider = GetComponent<Collider2D>();
+            if (!tCollider.isTrigger && GetComponent<Rigidbody2D>() == null)
+            {
+                Rigidbody2D rigid2D = gameObject.AddComponent<Rigidbody2D>();
+                rigid2D.gravityScale = 0.0f;
+                rigid2D.isKinematic = true;
+            }
+        }*/
 	}
 	
 	// Update is called once per frame
@@ -82,6 +101,11 @@ public class CollisionRecord : MonoBehaviour {
             return false;
         }
         Reciveration other = target.gameObject.GetComponent<CollisionRecord>().eventObject;
+        if (targetReciver == null)
+        {
+            Debug.LogWarning(name + ":target Reciver is null");
+            return false;
+        }
         return other != null && targetReciver.GetType() == other.GetType() && (other.parentReciveration == null || other.parentReciveration != eventObject.parentReciveration);
     }
     public bool AllowEvent(Collider2D target)
@@ -92,6 +116,12 @@ public class CollisionRecord : MonoBehaviour {
             return false;
         }
         Reciveration other = tRecord.eventObject;
+        if(targetReciver == null)
+        {
+            targetReciver = eventObject as CollisionReciver;
+            //Debug.LogWarning(name + ":target Reciver is null");
+            return false;
+        }
         return other != null && targetReciver.GetType() == other.GetType() && (other.parentReciveration == null || other.parentReciveration != eventObject.parentReciveration);
     }
 
@@ -99,6 +129,7 @@ public class CollisionRecord : MonoBehaviour {
     {
         if (!AllowEvent(tCollision)) { return; }
         if (targetReciver == null) { return; }
+        //Debug.LogWarning(tCollision.gameObject.name+" collision ");
         targetReciver.Collision(eventid, tCollision, type);
     }
     void CallTriggerEvent(Collider2D tCollider, CollisionType type)

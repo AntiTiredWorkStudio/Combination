@@ -63,6 +63,12 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
     public abstract void OnDynamicStateChange(DynamicState cState);
 
     /// <summary>
+    /// 可以拖拽条件
+    /// </summary>
+    /// <returns></returns>
+    public abstract bool CanHandle { get; }
+
+    /// <summary>
     /// 获取当前物体
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -77,6 +83,8 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
     public abstract void Trigger(string eid, Collider2D target, CollisionType type);
 
     public abstract void Init();
+
+    public abstract void UpdateState();
 
     /// <summary>
     /// 转换为任意基类的事件接收器
@@ -94,13 +102,17 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
         if (parentReciveration == null)
         {
             Rigidbody2D targetRigid = transform.gameObject.GetComponent<Rigidbody2D>();
-            Vector3 targetPos = Vector3.Lerp(transform.position, tPosition, Time.time);
-            Vector3 targetEulerAngles = Vector3.Lerp(transform.eulerAngles, tEularAngles, Time.time*0.2f);
+            Vector3 targetPos = Vector3.Lerp(transform.position, tPosition, 0.7f);
+            Vector3 targetEulerAngles = Vector3.Lerp(transform.eulerAngles, tEularAngles, Time.deltaTime * 10.0f);
+
             if (targetRigid != null)
             {
-                Debug.LogWarning("targetRigid.MovePosition");
+               // Debug.LogWarning("targetRigid.MovePosition");
                 targetRigid.velocity = Vector3.zero;
-                targetRigid.MovePosition(targetPos);
+                if ((targetEulerAngles - transform.eulerAngles).magnitude < 0.05f)
+                {
+                    targetRigid.MovePosition(targetPos);
+                }
                 targetRigid.MoveRotation(targetEulerAngles.z);
             }
             else

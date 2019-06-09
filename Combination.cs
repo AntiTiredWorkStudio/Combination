@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class Combination : Reciveration
 {
+    public override bool CanHandle
+    {
+        get
+        {
+            foreach (Bonduration bond in gameObject.GetComponentsInChildren<Bonduration>())
+            {
+                if (!bond.CanHandle)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     public override void Collision(string eid, Collision2D target, CollisionType type)
     {
 
@@ -20,6 +35,11 @@ public class Combination : Reciveration
     }
 
     public override void Trigger(string eid, Collider2D target, CollisionType type)
+    {
+
+    }
+
+    public override void UpdateState()
     {
 
     }
