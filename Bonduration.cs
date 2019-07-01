@@ -79,9 +79,17 @@ public class Bonduration : Reciveration
         }
         destinyBonduration = target;
         bondState = BondState.Connecting;
+        RootReciveration.ColliderMonitor.MagicCollider(true);
+        Timer.addTimer(gameObject,1.0f, ForceOnTime).startTimer();
 #if UNITY_EDITOR
         UnityEditor.Selection.activeObject = this.gameObject;
 #endif
+    }
+
+    public void ForceOnTime()
+    {
+        if(!ConnectionJurdgment && destinyBonduration!=null)
+        TransformComplete(transform, destinyBonduration.OppositePosition, destinyBonduration.OppositeRotateEularAngles);
     }
 
     public bool ConnectionJurdgment
@@ -150,6 +158,7 @@ public class Bonduration : Reciveration
             destinyBonduration = other;
         }
         bondState = BondState.Connection;
+        RootReciveration.ColliderMonitor.MagicCollider(false);
         targetAnimator.SetBool("GateOpen", true);
     }
 

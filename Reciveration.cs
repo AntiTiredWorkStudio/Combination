@@ -8,6 +8,40 @@ public enum DynamicState
 }
 public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
 
+
+    private MovementModifiers movementDelta = null;
+    /// <summary>
+    /// 运动变化
+    /// </summary>
+    public MovementModifiers MovementDelta
+    {
+        get
+        {
+            if (movementDelta == null)
+            {
+                movementDelta = gameObject.AddComponent<MovementModifiers>();
+            }
+            return movementDelta;
+        }
+    }
+
+    private ColliderModifiers colliderMonitor = null;
+    /// <summary>
+    /// 碰撞器控制器
+    /// </summary>
+    public ColliderModifiers ColliderMonitor
+    {
+        get
+        {
+            if (colliderMonitor == null)
+            {
+                colliderMonitor = gameObject.AddComponent<ColliderModifiers>();
+                colliderMonitor.Init();
+            }
+            return colliderMonitor;
+        }
+    }
+
     [ContextMenu("Dynamic All")]
     public void SetDynamic()
     {
@@ -112,15 +146,15 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
             if (targetRigid != null)
             {
                 targetRigid.velocity = Vector3.zero;
-                if ((targetEulerAngles - transform.eulerAngles).magnitude < 0.05f)
+                if ((targetEulerAngles - transform.eulerAngles).magnitude < 0.45f)
                 {
                     //Debug.LogWarning(name + ":" + targetPos +"->"+ tPosition);
-                    targetRigid.MovePosition(targetPos);
-                }/*
-                else
+                }
+               else
                 {
                     Debug.LogWarning(name + ":" + (targetEulerAngles - transform.eulerAngles).magnitude);
-                }*/
+                }
+                targetRigid.MovePosition(targetPos);
                 targetRigid.MoveRotation(targetEulerAngles.z);
             }
             else
@@ -145,6 +179,7 @@ public abstract class Reciveration : MonoBehaviour ,CollisionReciver {
             transform.position = tPosition;
             transform.eulerAngles = tEularAngles;
             tEularAngles.Set(0.0f, 0.0f, tEularAngles.z);
+            MovementDelta.MakeRaycast();
         }
         else
         {
