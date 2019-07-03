@@ -80,14 +80,14 @@ public class HandleManager : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            if(handleTarget != null)
+            if (handleTarget != null)
             {
                 handleTarget.SetDynamicState(DynamicState.Stable);
 
                 handleTarget = null;
 
-                HintRegionView(false);
             }
+            HintRegionView(false);
         }
     }
 
