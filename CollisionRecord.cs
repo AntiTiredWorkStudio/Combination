@@ -10,7 +10,21 @@ public interface CollisionReciver
     void Collision(string eid,Collision2D target, CollisionType type);
     void Trigger(string eid,Collider2D target, CollisionType type);
 }
+
+
 public class CollisionRecord : MonoBehaviour {
+    public static List<CollisionRecord> GetCollisionById(Transform target ,string id)
+    {
+        List<CollisionRecord> cRecords = new List<CollisionRecord>();
+        foreach(CollisionRecord cRec in target.GetComponentsInChildren<CollisionRecord>())
+        {
+            if(cRec.eventid == id)
+            {
+                cRecords.Add(cRec);
+            }
+        }
+        return cRecords;
+    }
     public static T TransforReciver<T>(Collider2D target) where T:Reciveration
     {
         if (target.gameObject.GetComponent<CollisionRecord>().eventObject == null)
@@ -32,6 +46,13 @@ public class CollisionRecord : MonoBehaviour {
     public string eventid;
     public Reciveration eventObject;
     CollisionReciver targetReciver;
+    public Collider2D selfCollider
+    {
+        get
+        {
+            return GetComponent<Collider2D>();
+        }
+    }
     // Use this for initialization
     void Start () {
         targetReciver = null;

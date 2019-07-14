@@ -49,7 +49,7 @@ public class HandleManager : MonoBehaviour {
                 //Debug.LogWarning(hit2D+":"+hit2D.collider.name);
                 handleTarget = CollisionRecord.TransforReciver<Reciveration>(hit2D.collider);
 
-                Debug.Log("click:" + handleTarget.RootReciveration.CanHandle);
+                //Debug.Log("click:" + handleTarget.RootReciveration.CanHandle);
                 if (!handleTarget.RootReciveration.CanHandle)
                 {
                     handleTarget.RootReciveration.UpdateState();
@@ -99,6 +99,16 @@ public class HandleManager : MonoBehaviour {
             if (collisionRec != null)
             {
                 Bonduration bonduration = collisionRec.eventObject.ToReciveration<Bonduration>();
+
+                Modurnation module = null;
+                if (handleTarget != null) {
+                    module = handleTarget.ToReciveration<Modurnation>();
+                }
+                
+                if (module && module.bodyCollisions.CollisionMotion(bonduration.OppositePosition, bonduration.OppositeRotateEularAngles.z))
+                {
+
+                }else
                 bonduration.Focus(result);
             }
         }

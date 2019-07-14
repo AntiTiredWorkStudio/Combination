@@ -49,12 +49,18 @@ public class MovementModifiers : Modifiers
             {
                 if(cRecord.eventid == "Attract" && cRecord.eventObject.RootReciveration!=ReciverationObject.RootReciveration)
                 {
+                    float attractDistance = Vector3.Distance(cRecord.eventObject.RootReciveration.transform.position, ReciverationObject.RootReciveration.transform.position);
                     Debug.DrawRay(lastPosition, direction * 100.0f, Color.red);
-                    Debug.LogWarning(ray2D.collider);
+                    //Debug.LogWarning(ray2D.collider);
+                    if (attractDistance>10.0f || attractDistance<2.0f)
+                    {
+                        continue;
+                    }
                     /*Vector3 targetAngle = ReciverationObject.transform.eulerAngles;
                     float z = Vector3.Angle(new Vector3(0.0f, 1.0f, 0.0f), (ReciverationObject.transform.position- cRecord.eventObject.transform.position).normalized);
                     targetAngle.z = 180.0f+z;*/
-                    ReciverationObject.RootReciveration.transform.eulerAngles =Vector3.Lerp(ReciverationObject.RootReciveration.transform.eulerAngles,  (cRecord.eventObject as Bonduration).OppositeRotateEularAngles,Time.deltaTime*20.0f);
+
+                   // ReciverationObject.RootReciveration.transform.rotation = Quaternion.Lerp(ReciverationObject.RootReciveration.transform.rotation,  Quaternion.Euler((cRecord.eventObject as Bonduration).OppositeRotateEularAngles),Time.deltaTime);
                   //Debug.LogWarning("Angle:" + z);
 
 //                    ReciverationObject.RootReciveration.tra
